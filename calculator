@@ -1,0 +1,38 @@
+import java.util.Scanner;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+public class CalculadoraCientifica {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        char continuar;
+
+        System.out.println("=== CALCULADORA CIENTÍFICA ===");
+        System.out.println("Operações disponíveis: +, -, *, /, ^ (potência), % (módulo), sqrt(x) (raiz quadrada)");
+        
+        do {
+            System.out.print("\nDigite a expressão matemática: ");
+            String expressao = scanner.nextLine();
+
+            expressao = expressao.replaceAll("(\\d+)\\s*\\^\\s*(\\d+)", "Math.pow($1,$2)");
+            expressao = expressao.replaceAll("sqrt\\((\\d+)\\)", "Math.sqrt($1)");
+
+            try {
+                Object resultado = engine.eval(expressao);
+                System.out.println("Resultado: " + resultado);
+            } catch (ScriptException e) {
+                System.out.println("Erro ao calcular a expressão!");
+            }
+
+            System.out.print("Deseja continuar? (s/n): ");
+            continuar = scanner.next().charAt(0);
+            scanner.nextLine();
+
+        } while (continuar == 's' || continuar == 'S');
+
+        System.out.println("Calculadora encerrada.");
+        scanner.close();
+    }
+}
